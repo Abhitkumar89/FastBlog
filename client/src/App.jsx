@@ -10,6 +10,12 @@ import AddBlog from './pages/user/AddBlog'
 import MyBlogs from './pages/user/MyBlogs'
 import Comments from './pages/user/Comments'
 import Profile from './pages/user/Profile'
+import AdminLogin from './components/admin/Login'
+import AdminLayout from './pages/admin/Layout'
+import AdminDashboard from './pages/admin/Dashboard'
+import AdminAddBlog from './pages/admin/AddBlog'
+import AdminListBlog from './pages/admin/ListBlog'
+import AdminComments from './pages/admin/Comments'
 import 'quill/dist/quill.snow.css'
 import {Toaster} from 'react-hot-toast'
 import { useAppContext } from './context/AppContext'
@@ -32,6 +38,15 @@ const App = () => {
           <Route path='my-blogs' element={<MyBlogs/>}/>
           <Route path='comments' element={<Comments/>}/>
           <Route path='profile' element={<Profile/>}/>
+        </Route>
+        
+        {/* Admin Routes */}
+        <Route path='/admin/login' element={<AdminLogin/>} />
+        <Route path='/admin' element={token ? <AdminLayout/> : <AdminLogin/>}>
+          <Route index element={<AdminDashboard/>}/>
+          <Route path='addBlog' element={<AdminAddBlog/>}/>
+          <Route path='listBlog' element={<AdminListBlog/>}/>
+          <Route path='comments' element={<AdminComments/>}/>
         </Route>
       </Routes>
     </div>
