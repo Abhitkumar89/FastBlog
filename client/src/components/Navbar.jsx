@@ -28,13 +28,13 @@ const Navbar = () => {
             <div className='flex items-center gap-2 sm:gap-4'>
                 {token ? (
                     <div className='flex items-center gap-2 sm:gap-4'>
-                        <div className='hidden sm:flex items-center gap-2'>
-                            <div className='w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center'>
-                                <span className='text-sm font-medium text-white'>
+                        <div className='flex items-center gap-2'>
+                            <div className='w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-indigo-500 flex items-center justify-center'>
+                                <span className='text-xs sm:text-sm font-medium text-white'>
                                     {user?.name?.charAt(0)?.toUpperCase()}
                                 </span>
                             </div>
-                            <span className='text-sm font-medium text-gray-700'>{user?.name}</span>
+                            <span className='text-xs sm:text-sm font-medium text-gray-700 hidden xs:block'>{user?.name}</span>
                         </div>
                         <button 
                             onClick={()=>navigate('/dashboard')}  

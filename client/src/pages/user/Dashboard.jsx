@@ -121,21 +121,21 @@ const Dashboard = () => {
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">BLOG TITLE</th>
-                                <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DATE</th>
-                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STATUS</th>
-                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ACTIONS</th>
+                                <th className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                                <th className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">BLOG TITLE</th>
+                                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DATE</th>
+                                <th className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STATUS</th>
+                                <th className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {dashboardData?.blogs?.length > 0 ? (
                                 dashboardData.blogs.slice(0, 5).map((blog, index) => (
                                     <tr key={blog._id}>
-                                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">{index + 1}</td>
-                                        <td className="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900 max-w-xs truncate sm:max-w-none sm:whitespace-nowrap">{blog.title}</td>
-                                        <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(blog.createdAt)}</td>
-                                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                                        <td className="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">{index + 1}</td>
+                                        <td className="px-2 sm:px-6 py-4 text-sm font-medium text-gray-900 max-w-32 sm:max-w-none truncate sm:whitespace-nowrap">{blog.title}</td>
+                                        <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(blog.createdAt)}</td>
+                                        <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                                             <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                                                 blog.isPublished 
                                                     ? 'bg-green-100 text-green-800' 
@@ -144,10 +144,11 @@ const Dashboard = () => {
                                                 {blog.isPublished ? 'Published' : 'Draft'}
                                             </span>
                                         </td>
-                                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <div className="flex items-center space-x-1 sm:space-x-2">
-                                                <button className="text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2 sm:px-3 py-1 rounded text-xs">
-                                                    {blog.isPublished ? 'Unpublish' : 'Publish'}
+                                        <td className="px-2 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <div className="flex items-center space-x-1">
+                                                <button className="text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-1 sm:px-2 py-1 rounded text-xs">
+                                                    <span className="hidden sm:inline">{blog.isPublished ? 'Unpublish' : 'Publish'}</span>
+                                                    <span className="sm:hidden">{blog.isPublished ? 'Unpub' : 'Pub'}</span>
                                                 </button>
                                                 <button className="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 p-1 rounded-full">
                                                     <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
