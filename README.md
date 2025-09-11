@@ -110,9 +110,8 @@ A full-stack blogging platform built with React, Node.js, and MongoDB, featuring
 5. **Engage**: Comment on other users' posts
 
 ### Admin Account
-- **Email**: admin@example.com
-- **Password**: admin
 - **Access**: Full platform management capabilities
+- **Note**: Admin credentials are configured in environment variables
 
 ## 🔧 Configuration
 
