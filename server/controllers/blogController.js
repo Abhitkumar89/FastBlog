@@ -17,12 +17,20 @@ export const addBlog = async (req, res)=>{
 
         const fileBuffer = fs.readFileSync(imageFile.path)
 
+        // ImageKit is now always configured with fallback values
+
         // Upload Image to ImageKit
-        const response = await imagekit.upload({
-            file: fileBuffer,
-            fileName: imageFile.originalname,
-            folder: "/blogs"
-        })
+        let response;
+        try {
+            response = await imagekit.upload({
+                file: fileBuffer,
+                fileName: imageFile.originalname,
+                folder: "/blogs"
+            });
+        } catch (error) {
+            console.error("ImageKit upload error:", error.message);
+            return res.json({success: false, message: "Image upload failed: " + error.message});
+        }
 
         // optimization through imagekit URL transformation
         const optimizedImageUrl = imagekit.url({
@@ -36,6 +44,23 @@ export const addBlog = async (req, res)=>{
 
         const image = optimizedImageUrl;
 
+        // Handle author field for both regular users and admin
+        let authorId = req.userId;
+        
+        // If it's an admin (email-based token), find or create admin user
+        if (req.userEmail && req.userEmail.includes('admin')) {
+            let adminUser = await User.findOne({ email: req.userEmail });
+            if (!adminUser) {
+                // Create admin user if it doesn't exist
+                adminUser = await User.create({
+                    name: 'Admin',
+                    email: req.userEmail,
+                    password: 'admin_password_hash' // This won't be used for login
+                });
+            }
+            authorId = adminUser._id;
+        }
+
         await Blog.create({
             title, 
             subTitle, 
@@ -43,7 +68,7 @@ export const addBlog = async (req, res)=>{
             category, 
             image, 
             isPublished,
-            author: req.userId
+            author: authorId
         })
 
         res.json({success: true, message: "Blog added successfully"})
@@ -156,9 +181,11 @@ export const getBlogComments = async (req, res) =>{
 export const generateContent = async (req, res)=>{
     try {
         const {prompt} = req.body;
-        const content = await main(prompt + ' Generate a blog content for this topic in simple text format')
+        console.log("Received prompt for AI generation:", prompt);
+        const content = await main(prompt);
         res.json({success: true, content})
     } catch (error) {
+        console.error("Content generation error:", error.message);
         res.json({success: false, message: error.message})
     }
 }

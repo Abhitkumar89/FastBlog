@@ -2,6 +2,7 @@ import React from 'react'
 import { assets } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
 import { useAppContext } from '../context/AppContext';
+import { motion } from 'framer-motion';
 
 const Navbar = () => {
     const {navigate, token, user, setToken, setUser} = useAppContext()
@@ -15,7 +16,12 @@ const Navbar = () => {
     }
 
     return (
-        <div className='flex justify-between items-center py-3 sm:py-5 px-4 sm:px-8 md:px-16 lg:px-20 xl:px-32'>
+        <motion.div 
+            className='flex justify-between items-center py-3 sm:py-5 px-4 sm:px-8 md:px-16 lg:px-20 xl:px-32'
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
             <div onClick={() => { navigate('/'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className='flex items-center cursor-pointer'>
                 <div className="w-6 h-6 sm:w-8 sm:h-8 bg-purple-600 rounded-lg flex items-center justify-center mr-2 sm:mr-3">
                     <svg className="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -72,7 +78,7 @@ const Navbar = () => {
                     </div>
                 )}
             </div>
-        </div>
+        </motion.div>
     )
 }
 

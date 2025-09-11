@@ -16,6 +16,7 @@ export const AppProvider = ({ children })=>{
     const [user, setUser] = useState(null)
     const [blogs, setBlogs] = useState([])
     const [input, setInput] = useState("")
+    const [isAuthLoading, setIsAuthLoading] = useState(true)
 
     const fetchBlogs = async ()=>{
         try {
@@ -27,32 +28,39 @@ export const AppProvider = ({ children })=>{
     }
 
     useEffect(()=>{
-        fetchBlogs();
-        
-        // Check for existing authentication on app load
+        // Check for existing authentication on app load FIRST
         const initializeAuth = () => {
             const token = localStorage.getItem('token')
             const userData = localStorage.getItem('user')
             
-            if(token && userData){
-                try {
-                    const parsedUser = JSON.parse(userData);
-                    setToken(token);
-                    setUser(parsedUser);
-                    axios.defaults.headers.common['Authorization'] = token;
-                } catch (error) {
-                    // If user data is corrupted, clear it
-                    localStorage.removeItem('token')
-                    localStorage.removeItem('user')
+            if(token){
+                setToken(token);
+                axios.defaults.headers.common['Authorization'] = token;
+                
+                // Only set user data if it exists (for regular users)
+                if(userData){
+                    try {
+                        const parsedUser = JSON.parse(userData);
+                        setUser(parsedUser);
+                    } catch (error) {
+                        // If user data is corrupted, clear it but keep token for admin
+                        localStorage.removeItem('user')
+                    }
                 }
             }
         }
         
         initializeAuth();
+        
+        // Fetch blogs after authentication is restored
+        fetchBlogs();
+        
+        // Set auth loading to false after initialization
+        setIsAuthLoading(false);
     },[])
 
     const value = {
-        axios, navigate, token, setToken, user, setUser, blogs, setBlogs, input, setInput
+        axios, navigate, token, setToken, user, setUser, blogs, setBlogs, input, setInput, fetchBlogs, isAuthLoading
     }
 
     return (

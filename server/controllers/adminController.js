@@ -6,11 +6,15 @@ export const adminLogin = async (req, res)=>{
     try {
         const {email, password} = req.body;
 
-        if(email !== process.env.ADMIN_EMAIL || password !== process.env.ADMIN_PASSWORD){
+        const adminEmail = process.env.ADMIN_EMAIL || "admin@example.com";
+        const adminPassword = process.env.ADMIN_PASSWORD || "admin";
+        const jwtSecret = process.env.JWT_SECRET || "secret@2025";
+
+        if(email !== adminEmail || password !== adminPassword){
             return res.json({success: false, message: "Invalid Credentials"})
         }
 
-        const token = jwt.sign({email}, process.env.JWT_SECRET)
+        const token = jwt.sign({email}, jwtSecret)
         res.json({success: true, token})
     } catch (error) {
         res.json({success: false, message: error.message})
@@ -68,5 +72,45 @@ export const approveCommentById = async (req, res) =>{
         res.json({success: true, message:"Comment approved successfully" })
     } catch (error) {
        res.json({success: false, message: error.message}) 
+    }
+}
+
+export const deleteBlogById = async (req, res) =>{
+    try {
+        const { id } = req.body;
+        
+        // Check if blog exists
+        const blog = await Blog.findById(id);
+        if (!blog) {
+            return res.json({ success: false, message: "Blog not found" });
+        }
+
+        // Admin can delete any blog
+        await Blog.findByIdAndDelete(id);
+
+        // Delete all comments associated with the blog
+        await Comment.deleteMany({blog: id});
+
+        res.json({success: true, message: 'Blog deleted successfully'})
+    } catch (error) {
+        res.json({success: false, message: error.message})
+    }
+}
+
+export const toggleBlogPublish = async (req, res) =>{
+    try {
+        const { id } = req.body;
+        
+        const blog = await Blog.findById(id);
+        if (!blog) {
+            return res.json({ success: false, message: "Blog not found" });
+        }
+
+        // Admin can toggle publish status of any blog
+        await Blog.findByIdAndUpdate(id, {isPublished: !blog.isPublished});
+
+        res.json({success: true, message: `Blog ${!blog.isPublished ? 'published' : 'unpublished'} successfully`})
+    } catch (error) {
+        res.json({success: false, message: error.message})
     }
 }

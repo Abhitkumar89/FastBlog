@@ -19,6 +19,9 @@ const Login = () => {
             setToken(data.token)
             localStorage.setItem('token', data.token)
             axios.defaults.headers.common['Authorization'] = data.token;
+            toast.success('Admin login successful!')
+            // Redirect to admin dashboard after successful login
+            window.location.href = '/admin'
           }
           else{
             toast.error(data.message)

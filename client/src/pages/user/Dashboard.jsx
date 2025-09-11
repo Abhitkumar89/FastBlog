@@ -9,11 +9,24 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetchDashboardData()
+        // Only fetch data if user is available
+        if (user) {
+            fetchDashboardData()
+        }
     }, [])
+
+    // Refetch data when user changes (e.g., after login)
+    useEffect(() => {
+        if (user) {
+            fetchDashboardData()
+        }
+    }, [user])
 
     const fetchDashboardData = async () => {
         try {
+            setLoading(true)
+            console.log('Fetching dashboard data...', { user, token: !!axios.defaults.headers.common['Authorization'] })
+            
             const [dashboardResponse, commentStatsResponse] = await Promise.all([
                 axios.get('/api/user/dashboard'),
                 axios.get('/api/user/comments/stats')
@@ -33,10 +46,13 @@ const Dashboard = () => {
                 }
                 
                 setDashboardData(dashboardData)
+                console.log('Dashboard data loaded successfully:', dashboardData)
             } else {
+                console.error('Dashboard API error:', dashboardResponse.data.message)
                 toast.error(dashboardResponse.data.message)
             }
         } catch (error) {
+            console.error('Dashboard fetch error:', error)
             toast.error('Failed to fetch dashboard data')
         } finally {
             setLoading(false)
@@ -109,11 +125,22 @@ const Dashboard = () => {
             {/* Latest Blogs Table */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
                 <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
-                    <div className="flex items-center">
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <h2 className="text-base sm:text-lg font-semibold text-gray-900">Latest Blogs</h2>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                            <svg className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <h2 className="text-base sm:text-lg font-semibold text-gray-900">Latest Blogs</h2>
+                        </div>
+                        <button 
+                            onClick={fetchDashboardData}
+                            className="flex items-center px-3 py-1 text-sm text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-md transition-colors"
+                        >
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Refresh
+                        </button>
                     </div>
                 </div>
                 

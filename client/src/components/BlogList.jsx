@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { blog_data, blogCategories } from '../assets/assets'
-import { motion } from "motion/react"
+import { motion, AnimatePresence } from 'framer-motion'
 import BlogCard from './BlogCard'
 import { useAppContext } from '../context/AppContext'
 
@@ -38,9 +38,25 @@ const BlogList = () => {
             </div>
         ))}
       </div>
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-16 sm:mb-20 lg:mb-24 mx-4 sm:mx-8 md:mx-16 lg:mx-24 xl:mx-40'>
-        {filteredBlogs().filter((blog)=> menu === "All" ? true : blog.category === menu).map((blog)=> <BlogCard key={blog._id} blog={blog}/>)}
-      </div>
+      <motion.div 
+        className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-16 sm:mb-20 lg:mb-24 mx-4 sm:mx-8 md:mx-16 lg:mx-24 xl:mx-40'
+        layout
+      >
+        <AnimatePresence>
+          {filteredBlogs().filter((blog)=> menu === "All" ? true : blog.category === menu).map((blog, index)=> (
+            <motion.div
+              key={blog._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+              layout
+            >
+              <BlogCard blog={blog}/>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </motion.div>
     </div>
   )
 }
