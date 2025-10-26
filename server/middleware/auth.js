@@ -8,7 +8,11 @@ const auth = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || "secret@2025");
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret) {
+            return res.json({ success: false, message: "JWT_SECRET environment variable is required" });
+        }
+        const decoded = jwt.verify(token, jwtSecret);
         req.userId = decoded.userId;
         req.userEmail = decoded.email;
         next();

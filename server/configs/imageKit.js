@@ -1,16 +1,14 @@
 import ImageKit from "imagekit";
 
-// Hardcoded ImageKit configuration to prevent environment variable issues
-const IMAGEKIT_CONFIG = {
-    publicKey: 'public_vuZGGK0ORUarw91U4jb/YG5WwgY=',
-    privateKey: 'private_zAOA4qQcItZurGh9Fk+VMrzZMmM=',
-    urlEndpoint: 'https://ik.imagekit.io/onfplk0io8'
-};
+// Get ImageKit credentials from environment variables
+const publicKey = process.env.IMAGEKIT_PUBLIC_KEY;
+const privateKey = process.env.IMAGEKIT_PRIVATE_KEY;
+const urlEndpoint = process.env.IMAGEKIT_URL_ENDPOINT;
 
-// Try to use environment variables first, fallback to hardcoded values
-const publicKey = process.env.IMAGEKIT_PUBLIC_KEY || IMAGEKIT_CONFIG.publicKey;
-const privateKey = process.env.IMAGEKIT_PRIVATE_KEY || IMAGEKIT_CONFIG.privateKey;
-const urlEndpoint = process.env.IMAGEKIT_URL_ENDPOINT || IMAGEKIT_CONFIG.urlEndpoint;
+// Validate required environment variables
+if (!publicKey || !privateKey || !urlEndpoint) {
+    throw new Error("ImageKit environment variables are required: IMAGEKIT_PUBLIC_KEY, IMAGEKIT_PRIVATE_KEY, IMAGEKIT_URL_ENDPOINT");
+}
 
 console.log("ImageKit Configuration:");
 console.log("PUBLIC_KEY:", publicKey ? "✓ Configured" : "✗ Missing");

@@ -9,7 +9,13 @@ import userCommentRouter from './routes/userCommentRoutes.js';
 
 const app = express();
 
-await connectDB()
+try {
+  await connectDB()
+  console.log('Database connection established')
+} catch (error) {
+  console.error('Failed to connect to database:', error.message)
+  process.exit(1)
+}
 
 // Middlewares
 app.use(cors())
