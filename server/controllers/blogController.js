@@ -55,7 +55,7 @@ export const addBlog = async (req, res)=>{
                 adminUser = await User.create({
                     name: 'Admin',
                     email: req.userEmail,
-                    password: 'admin_password_hash' // This won't be used for login
+                    password: 'admin_password_hash' // cant be used for login
                 });
             }
             authorId = adminUser._id;

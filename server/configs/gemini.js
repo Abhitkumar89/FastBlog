@@ -5,15 +5,11 @@ if (!apiKey) {
   throw new Error("GEMINI_API_KEY environment variable is required");
 }
 const genAI = new GoogleGenerativeAI(apiKey, {
-  apiVersion: 'v1'
+  apiVersion: "v1",
 });
 
 async function main(prompt) {
   try {
-    console.log("Generating content with prompt:", prompt);
-    console.log("Using API key:", apiKey.substring(0, 10) + "...");
-    
-    // Create a comprehensive prompt for blog content generation
     const enhancedPrompt = `Write a comprehensive, engaging blog post about "${prompt}". 
 
 Requirements:
@@ -27,26 +23,20 @@ Requirements:
 
 Format the response as markdown with proper headers and formatting.`;
 
-    const model = genAI.getGenerativeModel({ 
+    const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
       generationConfig: {
         temperature: 0.7,
         topK: 40,
         topP: 0.95,
         maxOutputTokens: 2048,
-      }
+      },
     });
     const result = await model.generateContent(enhancedPrompt);
     const response = await result.response;
     const text = response.text();
-    
-    console.log("AI generated content successfully");
     return text;
   } catch (error) {
-    console.error("Gemini AI Error Details:", error);
-    console.error("Error message:", error.message);
-    console.error("Error code:", error.code);
-    
     // Only return fallback if there's a real API error, not for content issues
     throw new Error(`AI content generation failed: ${error.message}`);
   }
